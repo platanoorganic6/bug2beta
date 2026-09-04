@@ -57,6 +57,12 @@
     text-decoration:none;
     margin-left:24px;
   }
+  .topbar nav button.legal-link{
+    font-size:14px;
+    color:var(--ink-soft);
+    margin-left:0;
+    font-family:var(--sans);
+  }
   .topbar nav a:hover{color:var(--ink);}
 
   /* ---------- Hero ---------- */
@@ -258,11 +264,60 @@
 
   footer{padding:32px 0 48px;color:var(--ink-soft);font-size:13px;}
   footer .wrap{border-top:1px solid var(--rule);padding-top:24px;}
+  footer .footer-links{
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px 16px;
+    margin-top:12px;
+    align-items:center;
+  }
   footer .admin-link{
     background:none;border:none;color:var(--ink-soft);
     font-family:var(--sans);font-size:13px;text-decoration:underline;
     cursor:pointer;padding:0;margin-left:12px;
   }
+  .legal-link{
+    background:none;border:none;color:var(--ink-soft);
+    font-family:var(--sans);font-size:13px;text-decoration:none;
+    cursor:pointer;padding:0;
+  }
+  .legal-link:hover{color:var(--ink);text-decoration:underline;}
+
+  .legal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(28,27,25,0.55);
+    z-index:1000;
+    padding:32px 16px;
+    overflow-y:auto;
+  }
+  .legal-overlay.open{display:block;}
+  .legal-panel{
+    max-width:680px;margin:0 auto;
+    background:var(--paper-raised);
+    border:1px solid var(--rule);
+    border-radius:4px;
+    padding:36px;
+    position:relative;
+  }
+  .legal-close{
+    position:absolute;top:20px;right:20px;
+    background:none;border:1px solid var(--rule);border-radius:3px;
+    width:30px;height:30px;font-size:16px;cursor:pointer;color:var(--ink-soft);
+  }
+  .legal-close:hover{border-color:var(--ink);color:var(--ink);}
+  .legal-panel h2{font-size:24px;margin:0 0 4px;padding-right:40px;}
+  .legal-panel .legal-updated{color:var(--ink-soft);font-size:13px;font-family:var(--mono);margin:0 0 24px;}
+  .legal-panel h3{font-size:15px;margin:26px 0 8px;}
+  .legal-panel p, .legal-panel li{font-size:14.5px;color:var(--ink);line-height:1.6;}
+  .legal-panel p{margin:0 0 12px;}
+  .legal-panel ul{margin:0 0 12px;padding-left:20px;}
+  .legal-panel table{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:14px;}
+  .legal-panel th{text-align:left;font-size:11.5px;color:var(--ink-soft);font-weight:600;padding:7px;border-bottom:1px solid var(--rule);}
+  .legal-panel td{padding:8px 7px;border-bottom:1px solid var(--rule);}
+  .legal-panel .contact-row{display:grid;grid-template-columns:100px 1fr;gap:10px;padding:9px 0;border-top:1px solid var(--rule);font-size:14px;}
+  .legal-panel .contact-row:first-of-type{border-top:none;}
+  .legal-panel .contact-row b{color:var(--ink-soft);font-size:12.5px;font-weight:600;}
 
   .admin-panel{
     display:none;
@@ -303,6 +358,7 @@
   <div class="wrap">
     <div class="brand"><span class="b2">Bugs</span> to <span class="beta">Beta</span></div>
     <nav>
+      <button class="legal-link" onclick="openLegal('about')">About</button>
       <a href="#curriculum">Curriculum</a>
       <a href="#proof">Proof</a>
       <a href="#experts">Mentors</a>
@@ -491,8 +547,15 @@
 
 <footer>
   <div class="wrap">
-    Bugs to Beta — a build-in-public training program from NaatiBru.
-    <button class="admin-link" id="adminToggle">Admin</button>
+    <div>Bugs to Beta — a build-in-public training program from NaatiBru.</div>
+    <div style="margin-top:6px;">© 2026 bug2beta.naatibru.com — a NaatiBru initiative. All rights reserved.</div>
+    <div class="footer-links">
+      <button class="legal-link" onclick="openLegal('terms')">Terms</button>
+      <button class="legal-link" onclick="openLegal('refunds')">Refunds</button>
+      <button class="legal-link" onclick="openLegal('privacy')">Privacy</button>
+      <button class="legal-link" onclick="openLegal('contact')">Contact</button>
+      <button class="admin-link" id="adminToggle">Applications (admin)</button>
+    </div>
     <div class="admin-panel" id="adminPanel">
       <h3>Applications</h3>
       <div id="adminGateWrap">
@@ -512,6 +575,115 @@
     </div>
   </div>
 </footer>
+
+<div class="legal-overlay" id="legalOverlay">
+  <div class="legal-panel">
+    <button class="legal-close" onclick="closeLegal()">×</button>
+    <div id="legalContent"></div>
+  </div>
+</div>
+
+<script>
+  const LEGAL_CONTENT = {
+    about: `
+      <h2>About Bugs to Beta</h2>
+      <p class="legal-updated">Where this program actually comes from.</p>
+      <p>Bugs to Beta grew out of building <a href="https://wholamino.naatibru.com" target="_blank" rel="noopener">WholAmino</a> — a live, paid nutrition app built solo, end to end, using Claude. Along the way, that build produced a long, honest log of things that looked done and weren't: a search feature that silently matched the wrong dish, daily totals that never reset past midnight, a payment gateway that returned success while checkout quietly failed behind the scenes.</p>
+      <p>None of that is unusual — it's what building a real product with AI actually looks like. Most people never see that part, because most content stops at the demo. This program exists to hand that real process to other entrepreneurs directly, instead of letting them find out the hard way, alone.</p>
+      <p>It's run by NaatiBru, the same team behind WholAmino, out of Bengaluru.</p>
+    `,
+    terms: `
+      <h2>Terms &amp; Conditions</h2>
+      <p class="legal-updated">Last updated: September 2026</p>
+      <h3>1. Who we are</h3>
+      <p>Bugs to Beta is a training program operated by NaatiBru (proprietorship), teaching entrepreneurs to build and ship products using Claude. By applying to or enrolling in the program, you agree to these Terms.</p>
+      <h3>2. The program</h3>
+      <p>Bugs to Beta is a 6-week, live, cohort-based training program. Enrollment is by application; NaatiBru reserves the right to accept or decline any application at its discretion. Session dates, format, and platform are communicated directly to accepted participants.</p>
+      <h3>3. Eligibility</h3>
+      <p>The program is intended for entrepreneurs and builders with a specific product idea they intend to develop during the cohort.</p>
+      <h3>4. Fees</h3>
+      <p>Fees are as displayed on this site at the time of your accepted application, payable via the method shared directly with accepted applicants.</p>
+      <h3>5. No outcome guarantee</h3>
+      <p>Bugs to Beta provides training, mentorship, and structured curriculum. It does not guarantee any specific business outcome, revenue, or product success.</p>
+      <h3>6. Intellectual property</h3>
+      <p>Participants retain full ownership of any product, code, or business idea they build during the program. Curriculum materials remain the property of NaatiBru, for personal use by enrolled participants only.</p>
+      <h3>7. Conduct</h3>
+      <p>NaatiBru reserves the right to remove any participant for conduct that is abusive or disruptive to the cohort, subject to the Refund Policy.</p>
+      <h3>8. Limitation of liability</h3>
+      <p>NaatiBru's liability in connection with the program is limited to the fee paid by the participant for that cohort.</p>
+      <h3>9. Governing law</h3>
+      <p>These Terms are governed by the laws of India, with disputes subject to the jurisdiction of the courts in Bengaluru, Karnataka.</p>
+    `,
+    refunds: `
+      <h2>Refund &amp; Cancellation Policy</h2>
+      <p class="legal-updated">Last updated: September 2026</p>
+      <h3>Cancellation by a participant</h3>
+      <table>
+        <thead><tr><th>When you cancel</th><th>Refund</th></tr></thead>
+        <tbody>
+          <tr><td>7+ days before cohort start date</td><td>Full refund</td></tr>
+          <tr><td>1–6 days before cohort start date</td><td>50% refund</td></tr>
+          <tr><td>On or after the cohort start date</td><td>No refund</td></tr>
+        </tbody>
+      </table>
+      <p>To request a cancellation, email us with your registered name and email. Refunds are processed to the original payment method within 5–7 business days of approval.</p>
+      <h3>Seat transfer</h3>
+      <p>You may transfer your seat to another person once, at no additional charge, before the cohort start date, provided the new participant meets eligibility criteria.</p>
+      <h3>Missed sessions</h3>
+      <p>No partial refunds for individual missed live sessions once the cohort has started.</p>
+      <h3>Cancellation by NaatiBru</h3>
+      <p>If a cohort is cancelled or postponed before it starts, all participants receive a full refund or the option to roll payment forward to the next cohort.</p>
+      <h3>Payment disputes</h3>
+      <p>All payments are processed through Razorpay. Contact us before raising a dispute with your bank or card issuer, so we can investigate directly.</p>
+    `,
+    privacy: `
+      <h2>Privacy Policy</h2>
+      <p class="legal-updated">Last updated: September 2026</p>
+      <h3>1. What we collect</h3>
+      <p>When you apply, we collect your name, email address, and a short description of your product idea. We do not collect payment card details — payments are handled by Razorpay, and we never see or store your card or bank information.</p>
+      <h3>2. How we use it</h3>
+      <ul>
+        <li>To review and respond to your application</li>
+        <li>To communicate cohort details if you're accepted</li>
+        <li>To match a completed payment to your application record</li>
+      </ul>
+      <h3>3. Where it's stored</h3>
+      <p>Application data is stored securely and accessible only to the program's operators. We do not sell or rent your information to third parties.</p>
+      <h3>4. Third parties</h3>
+      <p>Payment processing is handled by Razorpay, governed by their own privacy policy. We don't share your application details with them or anyone else beyond what's needed to run the program.</p>
+      <h3>5. Your rights</h3>
+      <p>You can request to see, correct, or delete the information we hold about you at any time — see Contact.</p>
+      <h3>6. Data retention</h3>
+      <p>We retain application data for as long as reasonably needed to run current and upcoming cohorts, or until you request deletion.</p>
+    `,
+    contact: `
+      <h2>Contact Us</h2>
+      <p class="legal-updated">Bugs to Beta — a training program by NaatiBru</p>
+      <div class="contact-row"><b>Business</b><span>NaatiBru (proprietorship)</span></div>
+      <div class="contact-row"><b>Program</b><span>Bugs to Beta</span></div>
+      <div class="contact-row"><b>Email</b><a href="mailto:platanoorganic6@gmail.com">platanoorganic6@gmail.com</a></div>
+      <div class="contact-row"><b>Phone</b><span>+91 63629 98567</span></div>
+      <div class="contact-row"><b>Address</b><span>Sri Sai Enclave, Flat No. 14, 4th Cross, Navodaya Nagar, JP Nagar 7th Phase, Bengaluru 560076</span></div>
+      <p style="margin-top:18px;">For application status, payment queries, or general questions, email us directly — we typically respond within 1–2 business days.</p>
+    `
+  };
+
+  function openLegal(key){
+    document.getElementById('legalContent').innerHTML = LEGAL_CONTENT[key];
+    document.getElementById('legalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLegal(){
+    document.getElementById('legalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('legalOverlay').addEventListener('click', function(e){
+    if (e.target === this) closeLegal();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') closeLegal();
+  });
+</script>
 
 <script>
   new QRCode(document.getElementById("wholaminoQR"), {
