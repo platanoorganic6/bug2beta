@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bugs to Beta</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+  :root{
+    --paper:#F6F5F0;
+    --paper-raised:#FFFFFF;
+    --ink:#1C1B19;
+    --ink-soft:#55524A;
+    --rule:#DAD5C7;
+    --red:#B23E28;
+    --red-bg:#F7E7E2;
+    --green:#2F6B4F;
+    --green-bg:#E3EFE7;
+    --amber:#B8842A;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px;}
+
+  a{color:var(--green);}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    border-bottom:1px solid var(--rule);
+    padding:20px 0;
+  }
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;}
+  .brand{
+    font-family:var(--mono);
+    font-weight:600;
+    font-size:15px;
+    letter-spacing:0.02em;
+  }
+  .brand .b2{color:var(--red);}
+  .brand .beta{color:var(--green);}
+  .topbar nav a{
+    font-size:14px;
+    color:var(--ink-soft);
+    text-decoration:none;
+    margin-left:24px;
+  }
+  .topbar nav a:hover{color:var(--ink);}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:64px 0 40px;}
+  .hero h1{
+    font-size:38px;
+    line-height:1.2;
+    margin:0 0 20px;
+    font-weight:700;
+    max-width:11.5em;
+  }
+  .hero .lede{
+    font-size:17px;
+    color:var(--ink-soft);
+    max-width:34em;
+    margin:0 0 32px;
+  }
+
+  .diff{
+    font-family:var(--mono);
+    font-size:14.5px;
+    background:var(--paper-raised);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    overflow:hidden;
+    margin:0 0 32px;
+  }
+  .diff .line{
+    padding:9px 16px;
+    white-space:pre-wrap;
+    border-left:3px solid transparent;
+  }
+  .diff .line.rm{background:var(--red-bg);color:#7A2C1B;border-left-color:var(--red);}
+  .diff .line.add{background:var(--green-bg);color:#1F4A36;border-left-color:var(--green);}
+  .diff .line.meta{color:var(--ink-soft);opacity:0.7;font-size:13px;}
+
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
+  .btn{
+    display:inline-block;
+    padding:12px 22px;
+    font-family:var(--sans);
+    font-weight:600;
+    font-size:15px;
+    border-radius:3px;
+    text-decoration:none;
+    cursor:pointer;
+    border:1px solid transparent;
+  }
+  .btn-primary{background:var(--ink);color:var(--paper-raised);}
+  .btn-primary:hover{background:#000;}
+  .btn-secondary{background:transparent;color:var(--ink);border-color:var(--rule);}
+  .btn-secondary:hover{border-color:var(--ink);}
+  .btn-note{font-size:13px;color:var(--ink-soft);}
+
+  /* ---------- Section shared ---------- */
+  section{padding:48px 0;border-top:1px solid var(--rule);}
+  h2{font-size:22px;margin:0 0 8px;font-weight:700;}
+  .section-sub{color:var(--ink-soft);font-size:15px;margin:0 0 28px;max-width:34em;}
+
+  /* ---------- Premise ---------- */
+  .premise p{font-size:16px;max-width:36em;}
+  .premise p + p{margin-top:16px;}
+
+  /* ---------- Proof / case study ---------- */
+  .log{border:1px solid var(--rule);border-radius:3px;background:var(--paper-raised);}
+  .log-entry{padding:16px 18px;display:grid;grid-template-columns:76px 1fr;gap:14px;}
+  .log-entry + .log-entry{border-top:1px solid var(--rule);}
+  .log-tag{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:600;
+    color:var(--red);
+    align-self:start;
+    padding-top:2px;
+  }
+  .log-tag.fixed{color:var(--green);}
+  .log-body b{display:block;font-size:14.5px;margin-bottom:3px;}
+  .log-body span{color:var(--ink-soft);font-size:14px;}
+
+  .wholamino-card{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:22px;
+    align-items:center;
+    background:var(--paper-raised);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:20px 22px;
+    margin-bottom:20px;
+  }
+  @media (max-width:520px){.wholamino-card{grid-template-columns:1fr;text-align:left;}}
+  .wholamino-qr{
+    width:112px;
+    height:112px;
+    background:#fff;
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .wholamino-copy .tag{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:600;
+    color:var(--green);
+    text-transform:none;
+    margin-bottom:6px;
+    display:block;
+  }
+  .wholamino-copy b{display:block;font-size:16px;margin-bottom:5px;}
+  .wholamino-copy span{color:var(--ink-soft);font-size:14px;display:block;margin-bottom:8px;}
+  .wholamino-copy a.link{font-family:var(--mono);font-size:13px;}
+
+  /* ---------- Curriculum ---------- */
+  .weeks{display:flex;flex-direction:column;border:1px solid var(--rule);border-radius:3px;background:var(--paper-raised);}
+  .week{display:grid;grid-template-columns:52px 1fr;gap:16px;padding:16px 18px;}
+  .week + .week{border-top:1px solid var(--rule);}
+  .week-num{font-family:var(--mono);color:var(--ink-soft);font-size:14px;padding-top:1px;}
+  .week b{display:block;font-size:15px;margin-bottom:3px;}
+  .week span{color:var(--ink-soft);font-size:14px;}
+
+  /* ---------- Who ---------- */
+  .who-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  @media (max-width:600px){.who-grid{grid-template-columns:1fr;}}
+  .who-col b{display:block;font-size:14px;margin-bottom:10px;color:var(--ink-soft);font-weight:600;}
+  .who-col ul{margin:0;padding-left:18px;font-size:14.5px;}
+  .who-col li{margin-bottom:8px;}
+  .who-col.yes li::marker{color:var(--green);}
+  .who-col.no li::marker{color:var(--red);}
+
+  .mentor-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:600px){.mentor-grid{grid-template-columns:1fr;}}
+  .mentor-card{
+    background:var(--paper-raised);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:20px;
+  }
+  .mentor-avatar{
+    width:44px;height:44px;
+    border-radius:50%;
+    background:var(--ink);
+    color:var(--paper-raised);
+    font-family:var(--mono);
+    font-weight:600;
+    font-size:15px;
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:14px;
+  }
+  .mentor-card b{display:block;font-size:15.5px;margin-bottom:2px;}
+  .mentor-card .role{color:var(--ink-soft);font-size:13px;display:block;margin-bottom:12px;}
+  .mentor-card ul{margin:0;padding-left:18px;font-size:14px;color:var(--ink-soft);}
+  .mentor-card li{margin-bottom:5px;}
+  .mentor-card.tba{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:flex-start;
+    border-style:dashed;
+    color:var(--ink-soft);
+  }
+  .mentor-card.tba .mentor-avatar{background:transparent;border:1px dashed var(--rule);color:var(--ink-soft);}
+  .mentor-card.tba b{color:var(--ink-soft);font-weight:600;}
+  .mentor-card.tba span{font-size:13.5px;}
+
+  /* ---------- Apply ---------- */
+  .apply-box{
+    background:var(--paper-raised);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:28px;
+  }
+  .apply-meta{
+    display:flex;
+    gap:28px;
+    flex-wrap:wrap;
+    margin-bottom:24px;
+    font-size:14px;
+  }
+  .apply-meta div b{display:block;font-size:13px;color:var(--ink-soft);font-weight:500;margin-bottom:2px;}
+  .apply-meta div span{font-family:var(--mono);font-size:14.5px;}
+
+  form{display:flex;flex-direction:column;gap:12px;max-width:420px;}
+  input, textarea{
+    font-family:var(--sans);
+    font-size:14.5px;
+    padding:11px 12px;
+    border:1px solid var(--rule);
+    border-radius:3px;
+    background:var(--paper);
+    color:var(--ink);
+  }
+  input:focus, textarea:focus{outline:2px solid var(--green);outline-offset:1px;border-color:var(--green);}
+  textarea{resize:vertical;min-height:70px;}
+  .apply-status{font-size:14px;margin-top:10px;}
+  .apply-status.ok{color:var(--green);}
+
+  footer{padding:32px 0 48px;color:var(--ink-soft);font-size:13px;}
+  footer .wrap{border-top:1px solid var(--rule);padding-top:24px;}
+  footer .admin-link{
+    background:none;border:none;color:var(--ink-soft);
+    font-family:var(--sans);font-size:13px;text-decoration:underline;
+    cursor:pointer;padding:0;margin-left:12px;
+  }
+
+  .admin-panel{
+    display:none;
+    background:var(--paper-raised);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:22px;
+    margin-top:18px;
+  }
+  .admin-panel.open{display:block;}
+  .admin-panel h3{font-size:15px;margin:0 0 12px;}
+  .admin-gate{display:flex;gap:8px;max-width:320px;}
+  .admin-gate input{flex:1;}
+  .admin-table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:12px;}
+  .admin-table th{text-align:left;color:var(--ink-soft);font-weight:600;font-size:12px;padding:6px 8px;border-bottom:1px solid var(--rule);}
+  .admin-table td{padding:8px;border-bottom:1px solid var(--rule);vertical-align:top;}
+  .paid-badge{
+    display:inline-block;padding:3px 8px;border-radius:3px;
+    font-family:var(--mono);font-size:11px;font-weight:600;
+  }
+  .paid-badge.yes{background:var(--green-bg);color:var(--green);}
+  .paid-badge.no{background:var(--red-bg);color:var(--red);}
+  .mark-paid-btn{
+    background:none;border:1px solid var(--rule);border-radius:3px;
+    padding:4px 9px;font-family:var(--sans);font-size:12px;cursor:pointer;
+    margin-left:8px;color:var(--ink-soft);
+  }
+  .mark-paid-btn:hover{border-color:var(--green);color:var(--green);}
+  .admin-empty{color:var(--ink-soft);font-size:14px;}
+  .admin-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+  .admin-toolbar .btn-secondary{padding:7px 14px;font-size:13px;}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="b2">Bugs</span> to <span class="beta">Beta</span></div>
+    <nav>
+      <a href="#curriculum">Curriculum</a>
+      <a href="#proof">Proof</a>
+      <a href="#experts">Mentors</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#apply">Apply</a>
+    </nav>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="wrap">
+    <h1>Learn to build a real product with Claude — by watching every mistake, not just the demo.</h1>
+    <p class="lede">A 6-week cohort for entrepreneurs, built from the actual build log of a live paid product — every bug found, every fix made, every wrong assumption caught by a real user before it caught you.</p>
+
+    <div class="diff">
+      <div class="line meta">// what most AI courses show you</div>
+      <div class="line rm">- prompt well, get a working app, ship it</div>
+      <div class="line meta">// what actually happens</div>
+      <div class="line add">+ prompt well, get something that LOOKS working, find out what's actually broken from a real user, fix it, then ship it</div>
+    </div>
+
+    <div class="cta-row">
+      <a href="#apply" class="btn btn-primary">Apply for the pilot cohort</a>
+      <a href="#curriculum" class="btn btn-secondary">See the curriculum</a>
+    </div>
+  </div>
+</div>
+
+<section class="premise">
+  <div class="wrap">
+    <h2>Why this exists</h2>
+    <p>Most "build with AI" content stops at the first working screen. It doesn't show you what happens when a real user logs a meal and the app silently drops half of it, or when your payment gateway returns success while the transaction quietly fails on Razorpay's side, or when a bug hides for weeks because your test data never crossed midnight.</p>
+    <p>This program is built directly from a live product's build log — the working parts and the broken ones — so you learn to build the way it actually happens, not the way it looks in a screen recording.</p>
+  </div>
+</section>
+
+<section id="proof">
+  <div class="wrap">
+    <h2>The proof: a real build log</h2>
+    <p class="section-sub">A sample of what actually got found and fixed while building the product this program is based on.</p>
+
+    <div class="wholamino-card">
+      <div class="wholamino-qr" id="wholaminoQR"></div>
+      <div class="wholamino-copy">
+        <span class="tag">Live product, not a mockup</span>
+        <b>WholAmino</b>
+        <span>The protein-quality app this entire curriculum is built from — scan to open it, or try it yourself before you apply.</span>
+        <a class="link" href="https://wholamino.naatibru.com" target="_blank" rel="noopener">wholamino.naatibru.com</a>
+      </div>
+    </div>
+
+    <div class="log">
+      <div class="log-entry">
+        <div class="log-tag">FOUND</div>
+        <div class="log-body"><b>Silent substring match</b><span>A search for "veggies" silently matched a dish called "Egg Bhurji" — because "egg" is a literal substring of "veggies." No error, no warning. Just a wrong answer that looked right.</span></div>
+      </div>
+      <div class="log-entry">
+        <div class="log-tag fixed">FIXED</div>
+        <div class="log-body"><b>Word-boundary matching + a warn-before-proceeding step</b><span>Any unrecognized or ambiguous match now surfaces to the user before it saves — never silently dropped.</span></div>
+      </div>
+      <div class="log-entry">
+        <div class="log-tag">FOUND</div>
+        <div class="log-body"><b>Numbers that never reset</b><span>Daily totals for fiber, fluid, sleep and training kept accumulating past midnight — invisible in testing because nobody tested across two calendar days.</span></div>
+      </div>
+      <div class="log-entry">
+        <div class="log-tag fixed">FIXED</div>
+        <div class="log-body"><b>Date-aware reset logic</b><span>Matched to how the one field that already worked correctly (protein) had been built from the start.</span></div>
+      </div>
+      <div class="log-entry">
+        <div class="log-tag">FOUND</div>
+        <div class="log-body"><b>A payment gateway that looked broken but wasn't the code</b><span>Every server response was correct — 200s, real orders created in Razorpay — but checkout still failed. Took systematic elimination to find the real cause: a merchant-side fraud check triggered by testing with the account's own email.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="curriculum">
+  <div class="wrap">
+    <h2>The curriculum</h2>
+    <p class="section-sub">Six weeks, live sessions, each built around one real decision or one real bug — not a generic tutorial.</p>
+    <div class="weeks">
+      <div class="week"><div class="week-num">01</div><div><b>Scoping an MVP you can actually finish</b><span>Cut scope ruthlessly. Leave with a one-page spec of what your product does — and what it deliberately doesn't.</span></div></div>
+      <div class="week"><div class="week-num">02</div><div><b>Real architecture, not toy code</b><span>Prompt Claude for auth, database schema and access rules that hold up — not a single-file demo.</span></div></div>
+      <div class="week"><div class="week-num">03</div><div><b>The silent-failure problem</b><span>Learn to distrust confident-looking output. Build in verification from day one.</span></div></div>
+      <div class="week"><div class="week-num">04</div><div><b>Payments and money without a dev team</b><span>Wire real payment infrastructure and learn to tell "my code" bugs apart from "the platform" bugs.</span></div></div>
+      <div class="week"><div class="week-num">05</div><div><b>Real user testing, not test harnesses</b><span>Put your MVP in front of 3–5 outside users and log everything that breaks.</span></div></div>
+      <div class="week"><div class="week-num">06</div><div><b>Positioning, pricing, what's next</b><span>Turn a working MVP into something people understand and pay for. Leave with a launch-ready one-pager.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Who this is for</h2>
+    <div class="who-grid">
+      <div class="who-col yes">
+        <b>A good fit</b>
+        <ul>
+          <li>You have a specific product idea — not just "I want to learn AI"</li>
+          <li>You're willing to deploy something publicly by week 6, not keep it private</li>
+          <li>You have a Claude account (any tier)</li>
+        </ul>
+      </div>
+      <div class="who-col no">
+        <b>Not a fit yet</b>
+        <ul>
+          <li>You're still deciding whether to start a company at all</li>
+          <li>You want a certificate, not a shipped product</li>
+          <li>You're looking for done-for-you development, not to build it yourself</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experts">
+  <div class="wrap">
+    <h2>Learn from someone who's actually done it</h2>
+    <p class="section-sub">Not theory from a slide deck — mentorship from people who've shipped.</p>
+    <div class="mentor-grid">
+      <div class="mentor-card">
+        <div class="mentor-avatar">R</div>
+        <b>Ravi</b>
+        <span class="role">Founder &amp; CEO, NutMobi AI / NaatiBru</span>
+        <ul>
+          <li>Built and shipped WholAmino solo — live app, real users, real payments</li>
+          <li>Wired up Supabase auth, database and row-level security from scratch</li>
+          <li>Took Razorpay live end-to-end: Edge Functions, webhook verification, real transactions</li>
+          <li>Runs this program directly from that build's own bug log</li>
+        </ul>
+      </div>
+      <div class="mentor-card tba">
+        <div class="mentor-avatar">?</div>
+        <b>More mentors joining</b>
+        <span>Additional guest builders will be announced as the cohort fills.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <h2>Pricing</h2>
+    <p class="section-sub">Founding-cohort rate for the pilot — locked in for early applicants only.</p>
+    <div class="apply-box">
+      <div class="apply-meta" style="align-items:flex-end;">
+        <div>
+          <b>Pilot cohort (now)</b>
+          <span style="font-size:26px;font-weight:700;font-family:var(--sans);color:var(--green);">₹7,999</span>
+        </div>
+        <div>
+          <b>Cohort 2 onward</b>
+          <span style="font-size:18px;text-decoration:line-through;color:var(--ink-soft);">₹19,999</span>
+        </div>
+        <div>
+          <b>First 5 seats</b>
+          <span style="font-family:var(--sans);font-weight:600;color:var(--red);">Extra ₹1,000 off — ₹6,999</span>
+        </div>
+      </div>
+      <p style="font-size:14.5px;color:var(--ink-soft);margin:0;">This is the founding cohort — the price goes up once there's a finished cohort of shipped products to point to. Applying now locks this rate; it won't be offered again.</p>
+      <p style="font-size:13.5px;color:var(--ink-soft);margin:10px 0 0;">Payment isn't collected here — once your application is accepted, you'll get a payment QR directly to complete your seat.</p>
+    </div>
+  </div>
+</section>
+
+<section id="apply">
+  <div class="wrap">
+    <h2>Apply for the pilot cohort</h2>
+    <p class="section-sub">Small group, limited seats, first run. Payment is collected privately after acceptance — apply below to start.</p>
+    <div class="apply-box">
+      <div class="apply-meta">
+        <div><b>Format</b><span>6 weekly live sessions</span></div>
+        <div><b>Cohort size</b><span>8–15 people</span></div>
+        <div><b>Location</b><span>Bengaluru / online</span></div>
+      </div>
+      <form id="applyForm">
+        <input type="text" id="name" placeholder="Your name" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <textarea id="idea" placeholder="One line on the product idea you'd build"></textarea>
+        <button type="submit" class="btn btn-primary" id="applyBtn" style="width:fit-content;">Submit application</button>
+      </form>
+      <div class="apply-status" id="applyStatus"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Bugs to Beta — a build-in-public training program from NaatiBru.
+    <button class="admin-link" id="adminToggle">Admin</button>
+    <div class="admin-panel" id="adminPanel">
+      <h3>Applications</h3>
+      <div id="adminGateWrap">
+        <div class="admin-gate">
+          <input type="password" id="adminPass" placeholder="Passcode">
+          <button class="btn btn-secondary" id="adminUnlock">Unlock</button>
+        </div>
+        <div class="apply-status" id="adminGateStatus"></div>
+      </div>
+      <div id="adminContent" style="display:none;">
+        <div class="admin-toolbar">
+          <span id="adminCount" class="admin-empty"></span>
+          <button class="btn btn-secondary" id="adminRefresh">Refresh</button>
+        </div>
+        <div id="adminList"></div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  new QRCode(document.getElementById("wholaminoQR"), {
+    text: "https://wholamino.naatibru.com",
+    width: 96,
+    height: 96,
+    colorDark: "#1C1B19",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.M
+  });
+</script>
+
+<script>
+  const ADMIN_PASSCODE = "bugs2beta2026";
+
+  // ---------- Apply form: persist to shared storage ----------
+  const form = document.getElementById('applyForm');
+  const status = document.getElementById('applyStatus');
+  const applyBtn = document.getElementById('applyBtn');
+
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const idea = document.getElementById('idea').value.trim();
+
+    applyBtn.disabled = true;
+    applyBtn.textContent = "Submitting…";
+    status.textContent = "";
+    status.classList.remove('ok');
+
+    const key = "applications:" + Date.now() + "-" + Math.random().toString(36).slice(2, 8);
+    const payload = { name, email, idea, submittedAt: new Date().toISOString() };
+
+    try {
+      const result = await window.storage.set(key, JSON.stringify(payload), true);
+      if (!result) throw new Error("Storage returned no result");
+      status.textContent = "Got it, " + (name.split(' ')[0] || name) + " — you'll hear back before the pilot cohort opens.";
+      status.classList.add('ok');
+      form.reset();
+    } catch (err) {
+      console.error("Application save failed:", err);
+      status.textContent = "Something went wrong saving your application — please try again in a moment.";
+    } finally {
+      applyBtn.disabled = false;
+      applyBtn.textContent = "Submit application";
+    }
+  });
+
+  // ---------- Admin panel ----------
+  const adminToggle = document.getElementById('adminToggle');
+  const adminPanel = document.getElementById('adminPanel');
+  const adminGateWrap = document.getElementById('adminGateWrap');
+  const adminPass = document.getElementById('adminPass');
+  const adminUnlock = document.getElementById('adminUnlock');
+  const adminGateStatus = document.getElementById('adminGateStatus');
+  const adminContent = document.getElementById('adminContent');
+  const adminList = document.getElementById('adminList');
+  const adminCount = document.getElementById('adminCount');
+  const adminRefresh = document.getElementById('adminRefresh');
+
+  adminToggle.addEventListener('click', function(){
+    adminPanel.classList.toggle('open');
+  });
+
+  adminUnlock.addEventListener('click', unlockAdmin);
+  adminPass.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlockAdmin(); });
+
+  function unlockAdmin(){
+    if (adminPass.value === ADMIN_PASSCODE) {
+      adminGateWrap.style.display = 'none';
+      adminContent.style.display = 'block';
+      loadApplications();
+    } else {
+      adminGateStatus.textContent = "Wrong passcode.";
+    }
+  }
+
+  adminRefresh.addEventListener('click', loadApplications);
+
+  async function loadApplications(){
+    adminList.innerHTML = '<div class="admin-empty">Loading…</div>';
+    try {
+      const listResult = await window.storage.list("applications:", true);
+      const keys = (listResult && listResult.keys) ? listResult.keys : [];
+
+      if (keys.length === 0) {
+        adminCount.textContent = "0 applications";
+        adminList.innerHTML = '<div class="admin-empty">No applications yet.</div>';
+        return;
+      }
+
+      const entries = [];
+      for (const key of keys) {
+        try {
+          const res = await window.storage.get(key, true);
+          if (res && res.value) {
+            const parsed = JSON.parse(res.value);
+            entries.push({ key, data: parsed });
+          }
+        } catch (innerErr) {
+          console.error("Failed to read", key, innerErr);
+        }
+      }
+
+      entries.sort((a, b) => new Date(b.data.submittedAt) - new Date(a.data.submittedAt));
+      const paidCount = entries.filter(e => e.data.paid).length;
+      adminCount.textContent = entries.length + " application" + (entries.length === 1 ? "" : "s") + " · " + paidCount + " paid";
+      renderTable(entries);
+    } catch (err) {
+      console.error("Failed to load applications:", err);
+      adminList.innerHTML = '<div class="admin-empty">Couldn\'t load applications — try refresh.</div>';
+    }
+  }
+
+  function renderTable(entries){
+    if (entries.length === 0) {
+      adminList.innerHTML = '<div class="admin-empty">No applications yet.</div>';
+      return;
+    }
+    let html = '<table class="admin-table"><thead><tr><th>Date</th><th>Name</th><th>Email</th><th>Idea</th><th>Paid</th></tr></thead><tbody>';
+    for (const e of entries) {
+      const d = e.data.submittedAt ? new Date(e.data.submittedAt).toLocaleString() : '';
+      const isPaid = !!e.data.paid;
+      html += '<tr>'
+        + '<td>' + escapeHtml(d) + '</td>'
+        + '<td>' + escapeHtml(e.data.name || '') + '</td>'
+        + '<td>' + escapeHtml(e.data.email || '') + '</td>'
+        + '<td>' + escapeHtml(e.data.idea || '') + '</td>'
+        + '<td>'
+          + '<span class="paid-badge ' + (isPaid ? 'yes' : 'no') + '">' + (isPaid ? 'PAID' : 'UNPAID') + '</span>'
+          + '<button class="mark-paid-btn" data-key="' + escapeHtml(e.key) + '" data-paid="' + isPaid + '">' + (isPaid ? 'Undo' : 'Mark paid') + '</button>'
+        + '</td>'
+        + '</tr>';
+    }
+    html += '</tbody></table>';
+    adminList.innerHTML = html;
+
+    adminList.querySelectorAll('.mark-paid-btn').forEach(function(btn){
+      btn.addEventListener('click', async function(){
+        const key = btn.getAttribute('data-key');
+        const currentlyPaid = btn.getAttribute('data-paid') === 'true';
+        btn.disabled = true;
+        btn.textContent = "Saving…";
+        try {
+          const res = await window.storage.get(key, true);
+          const data = JSON.parse(res.value);
+          data.paid = !currentlyPaid;
+          data.paidAt = data.paid ? new Date().toISOString() : null;
+          await window.storage.set(key, JSON.stringify(data), true);
+          loadApplications();
+        } catch (err) {
+          console.error("Failed to update paid status:", err);
+          btn.disabled = false;
+          btn.textContent = "Retry";
+        }
+      });
+    });
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+</script>
+
+</body>
+</html>
